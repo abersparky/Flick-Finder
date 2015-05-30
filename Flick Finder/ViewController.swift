@@ -21,7 +21,12 @@ class ViewController: UIViewController, UITextFieldDelegate {
      let BASE_URL = "https://api.flickr.com/services/rest/"
      
      var tapRecognizer: UITapGestureRecognizer? = nil
-     
+     let BOUNDING_BOX_HALF_WIDTH = 1.0
+     let BOUNDING_BOX_HALF_HEIGHT = 1.0
+     let LAT_MIN = -90.0
+     let LAT_MAX = 90.0
+     let LON_MIN = -180.0
+     let LON_MAX = 180.0
      
      override func viewDidLoad() {
           super.viewDidLoad()
@@ -163,10 +168,44 @@ class ViewController: UIViewController, UITextFieldDelegate {
      }
      
      @IBAction func searchLatLongButtonTouchUp(sender: AnyObject) {
+          /* Added from student request -- hides keyboard after searching */
+          self.dismissAnyVisibleKeyboards()
           
+          
+          if (latTextField.text == "" || longTextField.text == "") {
+               placeholderLabel.text = "Please enter lat/long values below."
+          }
+          else {
+               placeholderLabel.alpha = 0
+               
+               let keyValuePairs = [
+                    "method": "flickr.photos.search",
+                    "api_key": "f23a3195f2fb63a93781aeb1421f26b4",
+                    "bbox": createBoundingBoxString(),
+                    "safe_search": "1",
+                    "extras": "url_m",
+                    "format": "json",
+                    "nojsoncallback": "1"
+               ]
+               
+               getImageFromFlickrBySearch(keyValuePairs)
+          }
+
      }
      
-     
+     func createBoundingBoxString() -> String {
+          
+          let latitude = (self.latTextField.text as NSString).doubleValue
+          let longitude = (self.longTextField.text as NSString).doubleValue
+          
+          /* Fix added to ensure box is bounded by minimum and maximums */
+          let bottom_left_lon = max(longitude - BOUNDING_BOX_HALF_WIDTH, LON_MIN)
+          let bottom_left_lat = max(latitude - BOUNDING_BOX_HALF_HEIGHT, LAT_MIN)
+          let top_right_lon = min(longitude + BOUNDING_BOX_HALF_HEIGHT, LON_MAX)
+          let top_right_lat = min(latitude + BOUNDING_BOX_HALF_HEIGHT, LAT_MAX)
+          
+          return "\(bottom_left_lon),\(bottom_left_lat),\(top_right_lon),\(top_right_lat)"
+     }
    
 
      func getImageFromFlickrBySearch(methodArguments: [String : AnyObject]) {
