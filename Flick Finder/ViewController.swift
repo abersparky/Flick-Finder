@@ -157,7 +157,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     "method": "flickr.photos.search",
                     "api_key": "f23a3195f2fb63a93781aeb1421f26b4",
                     "text": searchTextField.text,
-                    "safe_search": "1",
+                    //"safe_search": "1",
                     "extras": "url_m",
                     "format": "json",
                     "nojsoncallback": "1"
@@ -182,7 +182,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                     "method": "flickr.photos.search",
                     "api_key": "f23a3195f2fb63a93781aeb1421f26b4",
                     "bbox": createBoundingBoxString(),
-                    "safe_search": "1",
+                    //"safe_search": "1",
                     "extras": "url_m",
                     "format": "json",
                     "nojsoncallback": "1"
@@ -259,11 +259,7 @@ class ViewController: UIViewController, UITextFieldDelegate {
                          } else {
                               println("Cannot find key 'photo' in \(photosDictionary)")
                          }
-                         
-                         
-                         
-                         
-                         
+   
                     } else {
                          println("Can't find key 'photos' in \(parsedResult)")
                     }
